@@ -18,50 +18,62 @@ function uuidv4() {
 var vue = new Vue({
     el: "#content",
     data: {
+        page: "savefolder",
         newTag: "",
         search: "",
         image: null,
+        searchImages: [],
+        allImages: [],
         tags: [],
+        searchTags: [],
         allTags: [],
-        imageTags: []
     },
     methods: {
         addImageTag: function(tag) {
             console.log("add");
-            if (!vue.imageTags.includes(tag)) {
-                vue.imageTags.push(tag);
+            if (!vue.tags.includes(tag)) {
+                vue.tags.push(tag);
             }
             vue.newTag = "";
         },
         deleteImageTag: function(tag) {
             console.log("delete");
-            let index = vue.imageTags.indexOf(tag);
+            let index = vue.tags.indexOf(tag);
             if (index > -1) {
-                vue.imageTags.splice(index, 1);
+                vue.tags.splice(index, 1);
             }
         },
         save: function() {
             console.log("save");
 
             if (vue.image !== null) {
-                let imageId = uuidv4() + "." + vue.image.name;
-                let ref = imagesRef.child(imageId);
-                ref.putString(vue.image.data, "data_url").then(function(snapshot) {
-                    console.log("Uploaded image to storage");
-                });
+                if (vue.image.imageId) {
+                    dbImages.set({
+                        imageId: vue.image.imageId,
+                        tags: vue.tags
+                    }).then(function() {
+                        console.log("Commited images collection updates");
+                    });
+                } else {
+                    let imageId = uuidv4() + "." + vue.image.name;
+                    let ref = imagesRef.child(imageId);
+                    ref.putString(vue.image.data, "data_url").then(function(snapshot) {
+                        console.log("Uploaded image to storage");
+                    });
 
-                dbImages.add({
-                    imageId: imageId,
-                    tags: vue.imageTags
-                }).then(function() {
-                    console.log("Commited images collection changes");
-                });
+                    dbImages.add({
+                        imageId: imageId,
+                        tags: vue.tags
+                    }).then(function() {
+                        console.log("Commited images collection changes");
+                    });
+                }
             }
             let batch = db.batch();
-            for (var i in vue.imageTags) {
-                if (!vue.allTags.includes(vue.imageTags[i])) {
+            for (var i in vue.tags) {
+                if (!vue.allTags.includes(vue.tags[i])) {
                     batch.set(dbTags.doc(), {
-                        tag: vue.imageTags[i]
+                        tag: vue.tags[i]
                     });
                 }
             }
@@ -69,7 +81,7 @@ var vue = new Vue({
                 console.log("Commited tags collection changes");
                 updateAllTags();
             });
-
+            resetTempVue();
         },
         uploadImage: function() {
             console.log("upload");
@@ -84,30 +96,91 @@ var vue = new Vue({
                 reader.readAsDataURL(vue.$refs.input.files[0])
             }
         },
-        searchTags: function() {
+        searchForTags: function() {
             console.log("search");
-            vue.tags = [];
+            vue.searchTags = [];
             let size = vue.allTags.length;
             for (let i = 0; i < size; ++i) {
                 if (vue.allTags[i].toLowerCase().includes(vue.search.toLowerCase())) {
-                    vue.tags.push(vue.allTags[i]);
+                    vue.searchTags.push(vue.allTags[i]);
                 }
             }
-        }
-    },
-    computed: {
+        },
+        switchPage: function(newPage) {
+            resetTempVue();
+            vue.page = newPage;
+        },
+        erase: function() {
+            console.log("erase");
 
+            // todo
+        },
+        searchForImages: function() {
+            console.log("searchImages");
+            vue.searchImages = [];
+
+            for (let i = 0; i < vue.allImages.length; ++i) {
+                let contained = false;
+                for (let j = 0; j < vue.allImages[i].tags.length; ++j)
+                if (vue.allImages[i].tags[j].toLowerCase().includes(vue.search.toLowerCase())) {
+                    contained = true;
+                    break;
+                }
+
+                if (contained) {
+                    vue.searchImages.push(vue.allImages[i]);
+                }
+            }
+        },
+        selectImage: function(image) {
+            console.log("selectImage");
+
+            vue.image = image;
+            vue.tags = image.tags;
+        }
     }
 })
 
+function resetTempVue() {
+    vue.newTag = "";
+    vue.searchTags = vue.allTags;
+    vue.search = "";
+    vue.image = null;
+    vue.tags = [];
+    vue.searchImages = vue.allImages;
+}
+
 function updateAllTags() {
+    vue.allTags = [];
     dbTags.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(document) {
             vue.allTags.push(document.data().tag);
         });
         vue.allTags.sort();
-        vue.tags = vue.allTags;
+        vue.searchTags = vue.allTags;
     });
 }
 
 updateAllTags();
+
+function updateAllImages() {
+    vue.allImages = [];
+    dbImages.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(document) {
+            let imageId = document.data().imageId;
+            let ref = imagesRef.child(imageId);
+            ref.getDownloadURL().then(function(url) {
+                vue.allImages.push({
+                    imageId: imageId,
+                    url: url,
+                    tags: document.data().tags
+                });
+
+                vue.allImages.sort();
+                vue.searchImages = vue.allImages;
+            });
+        });
+    });
+}
+
+updateAllImages();

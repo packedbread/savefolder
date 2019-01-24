@@ -22,31 +22,85 @@
 </head>
 <body>
     <div id="content">
-        <div id="image">
-            <img id="image-display" v-if="image != null" v-bind:src="image.data">
+        <div id="header">
+            <button v-on:click="switchPage('savefolder')" id="savefolder-button" type="button">Savefolder</button>
+            <button v-on:click="switchPage('viewfolder')" id="viewfolder-button" type="button">Viewfolder</button>
+            <button v-on:click="switchPage('login')" id="login-button" type="button">Log in</button>
         </div>
-        <button v-on:click="$refs.input.click()" id="upload" type="button">Upload</button><input v-on:change="uploadImage()" id="upload-input" ref="input" type="file">
-        <button v-on:click="save()" id="save" type="button">Save</button>
-        <div id="image-tags-container">
-            <div id="new-tag-container">
-                <input v-model="newTag" v-on:keyup.enter="addImageTag(newTag)" id="new-tag" type="text" placeholder="Type to add new tag...">
+        
+        <div v-if="page === 'savefolder'" id="savefolder">
+            <div id="new-container">
+                <div id="image-container">
+                    <img id="image" v-if="image != null" v-bind:src="image.data">
+                </div>
+                <div id="buttons-container">
+                    <button v-on:click="$refs.input.click()" id="upload" type="button">Upload</button><input v-on:change="uploadImage()" id="upload-input" ref="input" type="file">
+                    <button v-on:click="save()" id="save" type="button">Save</button>
+                </div>
+                <div id="image-tags-container">
+                    <div id="new-tag-container">
+                        <input v-model="newTag" v-on:keyup.enter="addImageTag(newTag)" id="new-tag" type="text" placeholder="Type to add new tag...">
+                    </div>
+                    <div id="image-tags" class="tags-container">
+                        <template v-for="tag in tags">
+                            <button v-on:click="deleteImageTag(tag)" class="tag">{{ tag }}</button>
+                        </template>
+                    </div>
+                </div>
             </div>
-            <div id=image-tags class="tags-container">
-                <template v-for="tag in imageTags">
-                    <button v-on:click="deleteImageTag(tag)" class="tag">{{ tag }}</button>
-                </template>
+            <div id="existing-tags-container">
+                <div id="search-container">
+                    <input v-on:keyup="searchForTags()" v-model="search" id="search" type="text" placeholder="Type to search tags...">
+                </div>
+                <div id="existing-tags" class="tags-container">
+                    <template v-for="tag in searchTags">
+                        <button v-on:click="addImageTag(tag)" class="tag">{{ tag }}</button>
+                    </template>
+                </div>
             </div>
         </div>
-        <div id="existing-tags-container">
-            <div id="search-container">
-                <input v-on:keyup="searchTags()" v-model="search" id="search" type="text" placeholder="Type to search tags...">
+
+
+
+        <div v-else-if="page === 'viewfolder'" id="viewfolder">
+            <div id="new-container">
+                <div id="image-container">
+                    <img id="image" v-if="image != null" v-bind:src="image.url">
+                </div>
+
+                <div id="buttons-container">
+                    <button v-on:click="erase()" id="upload" type="button">Erase</button>
+                    <button v-on:click="save()" id="save" type="button">Save</button>
+                </div>
+
+                <div id="image-tags-container">
+                    <div id="new-tag-container">
+                        <input v-model="newTag" v-on:keyup.enter="addImageTag(newTag)" id="new-tag" type="text" placeholder="Type to add new tag...">
+                    </div>
+                    <div id="image-tags" class="items-container">
+                        <template v-for="tag in tags">
+                            <button v-on:click="deleteImageTag(tag)" class="tag">{{ tag }}</button>
+                        </template>
+                    </div>
+                </div>
             </div>
-            <div id="existing-tags" class="tags-container">
-                <template v-for="tag in tags">
-                    <button v-on:click="addImageTag(tag)" class="tag">{{ tag }}</button>
-                </template>
+            <div id="existing-container">
+                <div id="search-container">
+                    <input v-on:keyup="searchForImages()" v-model="search" id="search" type="text" placeholder="Type to search images...">
+                </div>
+                <div id="existing" class="items-container">
+                    <template v-for="image in searchImages">
+                        <button v-on:click="selectImage(image)" class="tag img"><img class="preview" v-bind:src="image.url"></button>
+                    </template>
+                </div>
             </div>
-            </div>
+        </div>
+
+
+
+        <div v-else-if="page === 'login'" id="login">
+            LOGIN
+        </div>
     </div>
 
     <script src="app.js"></script>
