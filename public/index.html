@@ -46,7 +46,12 @@
                     <button v-on:click="addImageTag(tag)" class="tag">{{ tag }}</button>
                 </template>
             </div>
-            </div>
+        </div>
+        <div id='image-previews' class="previews-container">
+            <template v-for="preview in previews">
+                <button v-on:click="selectImage(preview)" class="preview" ><img id="previewim" :src="preview"></button>
+            </template>
+        </div>
     </div>
 
     <script src="app.js"></script>

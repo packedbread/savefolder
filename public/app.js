@@ -23,7 +23,8 @@ var vue = new Vue({
         image: null,
         tags: [],
         allTags: [],
-        imageTags: []
+        imageTags: [],
+        previews: []
     },
     methods: {
         addImageTag: function(tag) {
@@ -32,6 +33,7 @@ var vue = new Vue({
                 vue.imageTags.push(tag);
             }
             vue.newTag = "";
+            updateAllPreviews();
         },
         deleteImageTag: function(tag) {
             console.log("delete");
@@ -39,6 +41,12 @@ var vue = new Vue({
             if (index > -1) {
                 vue.imageTags.splice(index, 1);
             }
+            updateAllPreviews();
+        },
+        selectImage: function(preview) {
+            console.log("select");
+
+            vue.image = {data: preview};
         },
         save: function() {
             console.log("save");
@@ -55,6 +63,7 @@ var vue = new Vue({
                     tags: vue.imageTags
                 }).then(function() {
                     console.log("Commited images collection changes");
+                    updateAllPreviews();
                 });
             }
             let batch = db.batch();
@@ -73,6 +82,7 @@ var vue = new Vue({
         },
         uploadImage: function() {
             console.log("upload");
+            vue.image = null;
             if (vue.$refs.input.files && vue.$refs.input.files[0]) {
                 let reader = new FileReader();
                 reader.onload = function(event) {
@@ -81,6 +91,7 @@ var vue = new Vue({
                         data: event.target.result
                     };
                 };
+                console.log(vue.$refs.input.files[0]);
                 reader.readAsDataURL(vue.$refs.input.files[0])
             }
         },
@@ -110,4 +121,26 @@ function updateAllTags() {
     });
 }
 
+function updateAllPreviews() {
+    vue.previews = [];
+    dbImages.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(document) {
+            let flag = true;
+            let size = vue.imageTags.length;
+            for (let i = 0; i < size; ++i) {
+                if (document.data().tags.indexOf(vue.imageTags[i]) <= -1) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag == true) {
+                //console.log(vue.imageTags, flag, document.data().tags, document.data().tags.indexOf(vue.imageTags[0]));
+                //console.log(document.data().imageId);
+                imagesRef.child(document.data().imageId).getDownloadURL().then(x => vue.previews.push(x));
+            }
+        })
+    })
+}
+
 updateAllTags();
+updateAllPreviews();
