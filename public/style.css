@@ -24,7 +24,7 @@ button:active {
 
 #content {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-columns: 1fr 1fr 2.4fr;
     grid-template-rows: 1fr 50px 1fr;
     grid-gap: 10px;
     width: 100%;
@@ -81,9 +81,9 @@ button:active {
 }
 
 #image-previews {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     min-height: 0;
-    grid-template-rows: max-content auto;
     grid-column: 3 / 4;
     grid-row: 3 / 4;
 }
