@@ -78,7 +78,7 @@ var vue = new Vue({
                 console.log("Commited tags collection changes");
                 updateAllTags();
             });
-
+            updateAllTags();
         },
         uploadImage: function() {
             console.log("upload");
