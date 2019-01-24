@@ -1,0 +1,110 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 16px;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #fafad2;
+}
+
+button {
+    outline: none;
+    background: #eedd82;
+
+}
+
+button:active {
+    background: #eee8aa !important;
+}
+
+#content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: 1fr 50px 1fr;
+    grid-gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+#image {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+
+#image-display {
+    object-fit: contain;
+    width: 100%;
+    max-height: 100%;
+}
+
+#upload {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+#upload-input {
+    display: none;
+}
+
+#save {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+#image-tags-container {
+    display: grid;
+    min-height: 0;
+    grid-template-rows: max-content auto;
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+}
+
+#image-tags {
+    overflow: auto;
+}
+
+#existing-tags-container {
+    display: grid;
+    min-height: 0;
+    grid-template-rows: max-content auto;
+    grid-column: 3 / 4;
+    grid-row: 1 / 4;    
+}
+
+#existing-tags {
+    overflow: auto;
+}
+
+#new-tag-container {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+#new-tag {
+    height: 16px;
+    padding: 10px;
+    outline: none;
+}
+
+#search-container {
+    margin: 10px;    
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+#search {
+    height: 16px;
+    padding: 10px;
+    outline: none;
+}
+
+.tag {
+    padding: 10px;
+    margin: 10px;
+}
