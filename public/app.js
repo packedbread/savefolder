@@ -67,7 +67,9 @@ var vue = new Vue({
             }
             batch.commit().then(function() {
                 console.log("Commited tags collection changes");
+                updateAllTags();
             });
+
         },
         uploadImage: function() {
             console.log("upload");
@@ -98,10 +100,14 @@ var vue = new Vue({
     }
 })
 
-dbTags.get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(document) {
-        vue.allTags.push(document.data().tag);
+function updateAllTags() {
+    dbTags.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(document) {
+            vue.allTags.push(document.data().tag);
+        });
+        vue.allTags.sort();
+        vue.tags = vue.allTags;
     });
-    vue.allTags.sort();
-    vue.tags = vue.allTags;
-});
+}
+
+updateAllTags();
