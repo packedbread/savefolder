@@ -5,7 +5,6 @@ var storageRef = storage.ref();
 var imagesRef = storageRef.child("image");
 
 var db = firebase.firestore();
-var dbTags = db.collection("tags");
 var dbImages = db.collection("images");
 
 function uuidv4() {
@@ -69,18 +68,12 @@ var vue = new Vue({
                     });
                 }
             }
-            let batch = db.batch();
-            for (var i in vue.tags) {
+            for (let i = 0; i < vue.tags.length; ++i) {
                 if (!vue.allTags.includes(vue.tags[i])) {
-                    batch.set(dbTags.doc(), {
-                        tag: vue.tags[i]
-                    });
+                    vue.allTags.push(vue.tags[i]);
                 }
             }
-            batch.commit().then(function() {
-                console.log("Commited tags collection changes");
-                updateAllTags();
-            });
+
             resetTempVue();
         },
         uploadImage: function() {
@@ -161,19 +154,25 @@ function updateAllTags() {
     });
 }
 
-updateAllTags();
-
-function updateAllImages() {
+function updateAllImagesAndTags() {
     vue.allImages = [];
+    vue.allTags = [];
     dbImages.get().then(function(querySnapshot) {
         querySnapshot.forEach(function(document) {
+            let tags = document.data().tags;
+            for (let i = 0; i < tags.length; ++i) {
+                if (!vue.allTags.includes(tags[i])) {
+                    vue.allTags.push(tags[i]);
+                }
+            }
+
             let imageId = document.data().imageId;
             let ref = imagesRef.child(imageId);
             ref.getDownloadURL().then(function(url) {
                 vue.allImages.push({
                     imageId: imageId,
                     url: url,
-                    tags: document.data().tags
+                    tags: tags
                 });
 
                 vue.allImages.sort();
@@ -183,4 +182,4 @@ function updateAllImages() {
     });
 }
 
-updateAllImages();
+updateAllImagesAndTags();
