@@ -27,6 +27,33 @@ var vue = new Vue({
         searchTags: [],
         allTags: [],
     },
+    created() {
+        this.allImages = [];
+        this.allTags = [];
+        dbImages.get().then((querySnapshot) => {
+            querySnapshot.forEach((document) => {
+                let tags = document.data().tags;
+                for (let i = 0; i < tags.length; ++i) {
+                    if (!this.allTags.includes(tags[i])) {
+                        this.allTags.push(tags[i]);
+                    }
+                }
+
+                let imageId = document.data().imageId;
+                let ref = imagesRef.child(imageId);
+                ref.getDownloadURL().then((url) => {
+                    this.allImages.push({
+                        imageId: imageId,
+                        url: url,
+                        tags: tags
+                    });
+
+                    this.allImages.sort();
+                    this.searchImages = this.allImages;
+                });
+            });
+        });
+    },
     methods: {
         addImageTag: function(tag) {
             console.log("add");
@@ -47,7 +74,7 @@ var vue = new Vue({
 
             if (vue.image !== null) {
                 if (vue.image.imageId) {
-                    dbImages.set({
+                    dbImages.add({
                         imageId: vue.image.imageId,
                         tags: vue.tags
                     }).then(function() {
@@ -153,33 +180,3 @@ function updateAllTags() {
         vue.searchTags = vue.allTags;
     });
 }
-
-function updateAllImagesAndTags() {
-    vue.allImages = [];
-    vue.allTags = [];
-    dbImages.get().then(function(querySnapshot) {
-        querySnapshot.forEach(function(document) {
-            let tags = document.data().tags;
-            for (let i = 0; i < tags.length; ++i) {
-                if (!vue.allTags.includes(tags[i])) {
-                    vue.allTags.push(tags[i]);
-                }
-            }
-
-            let imageId = document.data().imageId;
-            let ref = imagesRef.child(imageId);
-            ref.getDownloadURL().then(function(url) {
-                vue.allImages.push({
-                    imageId: imageId,
-                    url: url,
-                    tags: tags
-                });
-
-                vue.allImages.sort();
-                vue.searchImages = vue.allImages;
-            });
-        });
-    });
-}
-
-updateAllImagesAndTags();
