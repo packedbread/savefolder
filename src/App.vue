@@ -48,6 +48,20 @@ export default {
 </script>
 
 <style>
+* {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 13pt;
+  user-select: none !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
 #app {
   background-color: #b4cfec;
   
