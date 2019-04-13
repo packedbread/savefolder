@@ -11,19 +11,37 @@
         <router-link class='router-link' to='/signup'>Sign up</router-link>
       </template>
       <template v-if='user !== null'>
+        <p>{{ user.email }}</p>
         <router-link class='router-link' to='/settings'>Settings</router-link>
       </template>
     </div>
-    <router-view class="page"/>
+    <router-view v-on:update="update" class="page"/>
   </div>
 </template>
 
 <script>
+import firebase from './firebase'
+
+let auth = firebase.auth();
+let database = firebase.database();
+
 export default {
   name: 'app',
+  created: function() {
+    auth.onAuthStateChanged(user => this.user = user);
+  },
   data: function () {
     return {
       user: null
+    }
+  },
+  methods: {
+    update: function(data) {
+      for (let v in data) {
+        if (this[v] !== undefined) {
+          this[v] = data[v];
+        }
+      }
     }
   }
 }
@@ -77,5 +95,9 @@ button:active {
 
 #header a.router-link-exact-active {
   background-color: #96b1ce;
+}
+
+p {
+  padding: 15px;
 }
 </style>

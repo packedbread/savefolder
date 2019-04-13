@@ -1,12 +1,12 @@
 <template>
   <div>
-    <form v-on:submit.prevent="login_submit()">
+    <form v-on:submit.prevent="submit()">
       <span>Enter e-mail:</span>
-      <input type="text" placeholder="e-mail" required>
+      <input v-model="email" type="text" placeholder="e-mail" required>
       <span>Password:</span>
-      <input type="password" placeholder="password" required>
+      <input v-model="password" type="password" placeholder="password" required>
       <span>And repeat password:</span>
-      <input type="password" placeholder="repeat password" required>
+      <input v-model="repeat_password" type="password" placeholder="repeat password" required>
       <button type="submit">Sign up</button>
       <label>{{ error }}</label>
     </form>
@@ -14,8 +14,39 @@
 </template>
 
 <script>
+import firebase from '../firebase'
+let auth = firebase.auth();
+
 export default {
-  
+  data: function() {
+    return {
+      error: '',
+      email: '',
+      password: '',
+      repeat_password: '',
+    }
+  },
+  methods: {
+    submit: async function() {
+      this.error = '';
+      
+      if (this.password !== this.repeat_password) {
+        this.error = 'Passwords do not match.';
+        return;
+      }
+      
+      await auth.createUserWithEmailAndPassword(this.email, this.password)
+        .catch(e => this.error = e.message);
+      this.email = '';
+      this.password = '';
+      this.repeat_password = '';
+
+      if (auth.currentUser != null) {
+        this.$emit('update', { user: auth.currentUser });
+        this.$router.push('/');
+      }
+    }
+  }
 }
 </script>
 
