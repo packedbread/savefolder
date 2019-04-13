@@ -54,7 +54,6 @@ export default {
   border: 0px;
   font-family: "Ubuntu Mono", monospace;
   font-size: 13pt;
-  user-select: none !important;
 }
 
 html, body {
