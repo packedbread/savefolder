@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     <img src="@/assets/obi-wan-hello-there.jpg" alt="Hello there">
     <h1>Hello there!</h1>
     <h2>This is Savefolder - a right place to store your internet memes.</h2>
@@ -10,7 +10,7 @@
 </template>
 
 <style scoped>
-.home {
+#home {
   padding: 10px;
   display: flex;
   flex-direction: column;
