@@ -28,7 +28,6 @@
 
 <script>
 import firebase from '../firebase';
-import uuidv4 from '../uuidv4';
 
 
 export default {
