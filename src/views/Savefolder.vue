@@ -34,15 +34,14 @@ export default {
     let database = firebase.database();
     let storage = firebase.storage();
 
-    this.db_tags_ref = database.ref('tags/');
     this.db_images_ref = database.ref('images/');
 
     this.storage_ref = storage.ref('images/');
 
-    this.db_tags_ref.on('value', snapshot => {
+    this.db_images_ref.on('value', snapshot => {
       let tags = [];
       for (let key in snapshot.val()) {
-        tags.push(snapshot.val()[key].tag);
+        tags = tags.concat(snapshot.val()[key].tags);
       }
       this.$set(this, 'external_tags', tags);
       this.search_tags();
@@ -56,7 +55,6 @@ export default {
       image_tags: [],
       external_tags: [],
       search_results: [],
-      db_tags_ref: null,
       db_images_ref: null,
       storage_ref: null
     };
@@ -76,28 +74,14 @@ export default {
     },
     save: function () {
       if (this.image !== null) {
-        this.save_image();
+        let db_image_ref = this.db_images_ref.push();
+        this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
+        db_image_ref.set({
+          tags: this.image_tags
+        });
+        this.image = null;
+        this.$set(this, 'image_tags', []);
       }
-
-      for (let i = 0; i < this.image_tags.length; ++i) {
-        let tag = this.image_tags[i];
-        if (!this.external_tags.includes(tag)) {
-          this.db_tags_ref.push({
-            tag: tag
-          });
-        }
-      }
-
-      this.image_tags = [];
-    },
-    save_image: function () {
-      let db_image_ref = this.db_images_ref.push();
-      this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
-      db_image_ref.set({
-        tags: this.image_tags
-      });
-
-      this.image = null;
     },
     add_new_tag: function () {
       this.add_tag(this.new_tag);
@@ -115,7 +99,7 @@ export default {
       }
     },
     search_tags: function () {
-      this.search_results = [];
+      this.$set(this, 'search_results', []);
       for (let i = 0; i < this.external_tags.length; ++i) {
         let tag = this.external_tags[i];
         if (tag.includes(this.search_request)) {
@@ -202,5 +186,4 @@ input {
 .tag {
   margin: 10px;
 }
-
 </style>
