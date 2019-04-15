@@ -1,18 +1,19 @@
 <template>
   <div id="app">
     <div id="header">
-      <router-link class='router-link' to="/">Home</router-link>
-      <router-link class='router-link' to="/savefolder">Savefolder</router-link>
-      <router-link class='router-link' to="/viewfolder">Viewfolder</router-link>
-      <router-link class='router-link' to='/about'>About</router-link>
-      <div class='filler'></div>
-      <template v-if='user === null'>
-        <router-link class='router-link' to="/login">Log in</router-link>
-        <router-link class='router-link' to='/signup'>Sign up</router-link>
+      <router-link class="router-link" to="/">Home</router-link>
+      <router-link class="router-link" to="/savefolder">Savefolder</router-link>
+      <router-link class="router-link" to="/viewfolder">Viewfolder</router-link>
+      <router-link class="router-link" to="/about">About</router-link>
+      <div class="filler"></div>
+      <template v-if="user === null">
+        <router-link class="router-link" to="/login">Log in</router-link>
+        <router-link class="router-link" to="/signup">Sign up</router-link>
       </template>
-      <template v-if='user !== null'>
+      <template v-if="user !== null">
         <p>{{ user.email }}</p>
-        <router-link class='router-link' to='/settings'>Settings</router-link>
+        <router-link class="router-link" to="/settings">Settings</router-link>
+        <a v-on:click="logout" class="router-link">Log out</a>
       </template>
     </div>
     <router-view v-on:update="update" class="page"/>
@@ -41,6 +42,11 @@ export default {
           this[v] = data[v];
         }
       }
+    },
+    logout: function () {
+      auth.signOut().then(() => {
+        this.$router.push('/');
+      });
     }
   }
 };
@@ -103,6 +109,7 @@ button:active {
   color: black;
   background-color: #a0bbd8;
   text-decoration: none;
+  cursor: pointer;
 }
 
 #header a.router-link-exact-active {
