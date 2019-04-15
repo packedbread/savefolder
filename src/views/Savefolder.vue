@@ -102,7 +102,7 @@ export default {
       this.$set(this, 'search_results', []);
       for (let i = 0; i < this.external_tags.length; ++i) {
         let tag = this.external_tags[i];
-        if (tag.includes(this.search_request)) {
+        if (tag.toLowerCase().includes(this.search_request.toLowerCase())) {
           this.search_results.push(tag);
         }
       }

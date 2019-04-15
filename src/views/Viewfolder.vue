@@ -113,7 +113,7 @@ export default {
       for (let i = 0; i < this.external_images.length; ++i) {
         let image = this.external_images[i];
         for (let j = 0; j < image.tags.length; ++j) {
-          if (image.tags[j].includes(this.search_request)) {
+          if (image.tags[j].toLowerCase().includes(this.search_request.toLowerCase())) {
             this.search_results.push(i);
             break;
           }
