@@ -23,14 +23,11 @@
 <script>
 import firebase from '../firebase';
 
-let database = firebase.database();
-let storage = firebase.storage();
-
 export default {
   data: function () {
     return {
 
-    }
+    };
   }
 };
 </script>

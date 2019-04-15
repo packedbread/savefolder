@@ -4,7 +4,7 @@
       <span></span>
       <img v-if="image !== null" v-bind:src="image.data">
     </div>
-    <input v-on:change="upload" ref="upload" id="upload-input" type="file"> 
+    <input v-on:change="upload" ref="upload" id="upload-input" type="file">
     <button v-on:click="$refs.upload.click();" id="upload">Upload</button>
     <button v-on:click="save" id="save">Save</button>
     <div id="tags-wrapper">
@@ -29,12 +29,11 @@
 <script>
 import firebase from '../firebase';
 
-
 export default {
   created: function () {
     let database = firebase.database();
     let storage = firebase.storage();
-    
+
     this.db_tags_ref = database.ref('tags/');
     this.db_images_ref = database.ref('images/');
 
@@ -43,11 +42,11 @@ export default {
     this.db_tags_ref.on('value', snapshot => {
       let tags = [];
       for (let key in snapshot.val()) {
-        tags.push(snapshot.val()[key].tag)
+        tags.push(snapshot.val()[key].tag);
       }
       this.$set(this, 'external_tags', tags);
       this.search_tags();
-    })
+    });
   },
   data: function () {
     return {
@@ -60,7 +59,7 @@ export default {
       db_tags_ref: null,
       db_images_ref: null,
       storage_ref: null
-    }
+    };
   },
   methods: {
     upload: function () {
@@ -72,7 +71,7 @@ export default {
             data: event.target.result
           };
         };
-        reader.readAsDataURL(this.$refs.upload.files[0])
+        reader.readAsDataURL(this.$refs.upload.files[0]);
       }
     },
     save: function () {
@@ -92,10 +91,8 @@ export default {
       this.image_tags = [];
     },
     save_image: function () {
-      let uuid = uuidv4();
-
       let db_image_ref = this.db_images_ref.push();
-      this.storage_ref.child(db_image_ref.key).putString(this.image.data, "data_url");
+      this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
       db_image_ref.set({
         tags: this.image_tags
       });
@@ -108,7 +105,7 @@ export default {
     },
     add_tag: function (tag) {
       if (!this.image_tags.includes(tag)) {
-        this.image_tags.push(tag)
+        this.image_tags.push(tag);
       }
     },
     remove_tag: function (tag) {
