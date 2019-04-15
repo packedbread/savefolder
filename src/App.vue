@@ -20,23 +20,22 @@
 </template>
 
 <script>
-import firebase from './firebase'
+import firebase from './firebase';
 
 let auth = firebase.auth();
-let database = firebase.database();
 
 export default {
   name: 'app',
-  created: function() {
-    auth.onAuthStateChanged(user => this.user = user);
+  created: function () {
+    auth.onAuthStateChanged(user => { this.user = user; });
   },
   data: function () {
     return {
       user: null
-    }
+    };
   },
   methods: {
-    update: function(data) {
+    update: function (data) {
       for (let v in data) {
         if (this[v] !== undefined) {
           this[v] = data[v];
@@ -44,7 +43,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style>
@@ -53,7 +52,7 @@ export default {
   padding: 0px;
   border: 0px;
   font-family: "Ubuntu Mono", monospace;
-  font-size: 13pt;
+  font-size: 15pt;
 }
 
 html, body {
@@ -63,7 +62,7 @@ html, body {
 
 #app {
   background-color: #b4cfec;
-  
+
   height: 100%;
 
   margin: 0;

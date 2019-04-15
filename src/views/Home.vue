@@ -3,9 +3,9 @@
     <img src="@/assets/obi-wan-hello-there.jpg" alt="Hello there">
     <h1>Hello there!</h1>
     <h2>This is Savefolder - a right place to store your internet memes.</h2>
-    <p>You can upload pictures and add search tags to them in Savefolder</p>
-    <p>You can view and search all uploaded images in Viewfolder</p>
-    <p>Also you can edit image tags in Viewfolder</p>
+    <p>You can upload pictures and add search tags to them in <router-link to="/savefolder">Savefolder</router-link></p>
+    <p>You can view and search all uploaded images in <router-link to="/viewfolder">Viewfolder</router-link></p>
+    <p>Also you can edit image tags in <router-link to="/viewfolder">Viewfolder</router-link></p>
   </div>
 </template>
 
@@ -38,5 +38,11 @@ img {
   width: 50%;
   max-height: 100%;
 }
-</style>
 
+a {
+  font-size: inherit;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+}
+</style>

@@ -12,23 +12,24 @@
 </template>
 
 <script>
-import firebase from '../firebase'
+import firebase from '../firebase';
+
 let auth = firebase.auth();
 
 export default {
-  data: function() {
+  data: function () {
     return {
       error: '',
       email: '',
       password: ''
-    }
+    };
   },
   methods: {
-    submit: async function() {
+    submit: async function () {
       this.error = '';
 
       await auth.signInWithEmailAndPassword(this.email, this.password)
-        .catch(e => this.error = e.message);
+        .catch(e => { this.error = e.message; });
       this.email = '';
       this.password = '';
 
@@ -38,7 +39,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -67,5 +68,3 @@ label {
   text-align: center;
 }
 </style>
-
-

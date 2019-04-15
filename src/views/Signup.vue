@@ -14,29 +14,29 @@
 </template>
 
 <script>
-import firebase from '../firebase'
+import firebase from '../firebase';
 let auth = firebase.auth();
 
 export default {
-  data: function() {
+  data: function () {
     return {
       error: '',
       email: '',
       password: '',
-      repeat_password: '',
-    }
+      repeat_password: ''
+    };
   },
   methods: {
-    submit: async function() {
+    submit: async function () {
       this.error = '';
-      
+
       if (this.password !== this.repeat_password) {
         this.error = 'Passwords do not match.';
         return;
       }
-      
+
       await auth.createUserWithEmailAndPassword(this.email, this.password)
-        .catch(e => this.error = e.message);
+        .catch(e => { this.error = e.message; });
       this.email = '';
       this.password = '';
       this.repeat_password = '';
@@ -47,7 +47,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -76,5 +76,3 @@ label {
   text-align: center;
 }
 </style>
-
-
