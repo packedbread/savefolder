@@ -31,13 +31,13 @@
 import firebase from '../firebase';
 
 export default {
-  created: function () {preview
+  created: function () {
     let database = firebase.database();
     let storage = firebase.storage();
 
     this.db_tags_ref = database.ref('tags/');
     this.db_images_ref = database.ref('images/');
- 
+
     this.storage_ref = storage.ref('images/');
 
     this.db_images_ref.on('value', async snapshot => {
@@ -51,7 +51,7 @@ export default {
         });
       }
       this.search_images();
-    })
+    });
   },
   data: function () {
     return {
@@ -81,7 +81,7 @@ export default {
       if (this.image_id !== '') {
         await this.db_images_ref.child(this.image_id).set({
           tags: this.image_tags
-        })
+        });
       }
       this.image_id = '';
       this.image_url = '';
@@ -109,7 +109,7 @@ export default {
     },
     search_images: function () {
       this.$set(this, 'search_results', []);
-      
+
       for (let i = 0; i < this.external_images.length; ++i) {
         let image = this.external_images[i];
         for (let j = 0; j < image.tags.length; ++j) {
