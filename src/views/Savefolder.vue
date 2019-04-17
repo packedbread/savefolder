@@ -35,7 +35,6 @@ export default {
     let storage = firebase.storage();
 
     this.db_images_ref = database.ref('images/');
-
     this.storage_ref = storage.ref('images/');
 
     this.db_images_ref.on('value', snapshot => {
@@ -77,6 +76,7 @@ export default {
         let db_image_ref = this.db_images_ref.push();
         this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
         db_image_ref.set({
+          created_by: auth.currentUser.uid,
           tags: this.image_tags
         });
         this.image = null;

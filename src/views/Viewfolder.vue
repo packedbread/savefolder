@@ -35,9 +35,7 @@ export default {
     let database = firebase.database();
     let storage = firebase.storage();
 
-    this.db_tags_ref = database.ref('tags/');
     this.db_images_ref = database.ref('images/');
-
     this.storage_ref = storage.ref('images/');
 
     this.db_images_ref.on('value', async snapshot => {
@@ -79,7 +77,7 @@ export default {
     },
     save: async function () {
       if (this.image_id !== '') {
-        await this.db_images_ref.child(this.image_id).set({
+        await this.db_images_ref.child(this.image_id).update({
           tags: this.image_tags
         });
       }
@@ -112,10 +110,16 @@ export default {
 
       for (let i = 0; i < this.external_images.length; ++i) {
         let image = this.external_images[i];
-        for (let j = 0; j < image.tags.length; ++j) {
-          if (image.tags[j].toLowerCase().includes(this.search_request.toLowerCase())) {
+        if (image.tags === undefined) {
+          if (this.search_request === '' || this.search_request === ':notags') {
             this.search_results.push(i);
-            break;
+          }
+        } else {
+          for (let j = 0; j < image.tags.length; ++j) {
+            if (image.tags[j].toLowerCase().includes(this.search_request.toLowerCase())) {
+              this.search_results.push(i);
+              break;
+            }
           }
         }
       }

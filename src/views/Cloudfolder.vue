@@ -35,7 +35,10 @@
 </template>
 
 <script>
-import jsonp from 'jsonp'
+import jsonp from 'jsonp';
+import firebase from '../firebase';
+
+let auth = firebase.auth();
 
 function parse_hash_params(hash) {
   let entries = hash.split('&').map(s => s.replace('#', '').split('='));
@@ -53,15 +56,38 @@ function get_vk_request(method, params, access_token) {
   return request;
 }
 
-function vk_photo_type_max(a, b) {
+function vk_photo_type_compare(a, b) {
+  // returns result of comparison: a < b
   const order = ['s', 'm', 'x', 'y', 'z', 'w'];
   const cut = ['o', 'p', 'q', 'r'];
   
+  if (order.includes(a)) {
+    if (order.includes(b)) {
+      return order.indexOf(a) < order.indexOf(b);
+    } else {
+      return false;
+    }
+  } else {
+    if (order.includes(b)) {
+      return true;
+    } else {
+      return cut.indexOf(a) < cut.indexOf(b);
+    }
+  }
 }
 
 export default {
+  created: function() {
+    let db = firebase.database();
+    let storage = firebase.storage();
+    
+    this.db_images_ref = db.ref('images/');
+    this.storage_ref = storage.ref('images/');
+  },
   data: function () {
     return {
+      db_images_ref: null,
+      storage_ref: null,
       album_list: [],
       uploading: [],
       uploaded: []
@@ -113,19 +139,36 @@ export default {
       }
       const request = get_vk_request(method, params, this.access_token);
 
-      jsonp(request, (err, data) => {
+      jsonp(request, async (err, data) => {
         if (data.error) {
           console.log(data.error.error_msg);
         }
         if (data.response) {
-          console.log(data.response);
           let items = data.response.items;
           
           for (let i = 0; i < items.length; ++i) {
             let sizes = items[i].sizes;
-            for (let j = 0; j < sizes.length; ++i) {
-              
+            if (sizes.length < 1) {
+              continue;
             }
+            let best_size_index = 0;
+            for (let j = 1; j < sizes.length; ++j) {
+              if (vk_photo_type_compare(sizes[best_size_index].type, sizes[j].type)) {
+                best_size_index = j;
+              }
+            }
+
+            let url = sizes[best_size_index].url;
+
+            let response = await fetch(url);
+            let blob = await response.blob();
+
+            let db_image_ref = this.db_images_ref.push();
+            this.storage_ref.child(db_image_ref.key).put(blob);
+            db_image_ref.set({
+              created_by: auth.currentUser.uid,
+              tags: []
+            });
           }
 
           this.uploading.splice(this.uploading.indexOf(album.id), 1);
@@ -166,4 +209,3 @@ li {
   margin: 10px;
 }
 </style>
-
