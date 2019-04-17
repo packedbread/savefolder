@@ -29,6 +29,8 @@
 <script>
 import firebase from '../firebase';
 
+let auth = firebase.auth();
+
 export default {
   created: function () {
     let database = firebase.database();

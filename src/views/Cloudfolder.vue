@@ -40,7 +40,7 @@ import firebase from '../firebase';
 
 let auth = firebase.auth();
 
-function parse_hash_params(hash) {
+function parse_hash_params (hash) {
   let entries = hash.split('&').map(s => s.replace('#', '').split('='));
   return entries.reduce((prev, cur) => {
     prev[cur[0]] = cur[1];
@@ -48,19 +48,19 @@ function parse_hash_params(hash) {
   }, {});
 }
 
-function get_vk_request(method, params, access_token) {
+function get_vk_request (method, params, access_token) {
   let request = `https://api.vk.com/method/${method}?access_token=${access_token}&v=5.95`;
   for (let key in params) {
-    request += `&${key}=${params[key]}`
+    request += `&${key}=${params[key]}`;
   }
   return request;
 }
 
-function vk_photo_type_compare(a, b) {
+function vk_photo_type_compare (a, b) {
   // returns result of comparison: a < b
   const order = ['s', 'm', 'x', 'y', 'z', 'w'];
   const cut = ['o', 'p', 'q', 'r'];
-  
+
   if (order.includes(a)) {
     if (order.includes(b)) {
       return order.indexOf(a) < order.indexOf(b);
@@ -77,10 +77,10 @@ function vk_photo_type_compare(a, b) {
 }
 
 export default {
-  created: function() {
+  created: function () {
     let db = firebase.database();
     let storage = firebase.storage();
-    
+
     this.db_images_ref = db.ref('images/');
     this.storage_ref = storage.ref('images/');
   },
@@ -91,7 +91,7 @@ export default {
       album_list: [],
       uploading: [],
       uploaded: []
-    }
+    };
   },
   methods: {
     authorize: function () {
@@ -108,10 +108,13 @@ export default {
       const params = {
         owner_id: this.user_id,
         need_system: true
-      }
+      };
       const request = get_vk_request(method, params, this.access_token);
 
       jsonp(request, (err, data) => {
+        if (err) {
+          console.log(err);
+        }
         if (data.error) {
           console.log(data.error.error_msg);
         }
@@ -123,7 +126,7 @@ export default {
               id: items[i].id,
               title: items[i].title,
               size: items[i].size
-            })
+            });
           }
         }
       });
@@ -136,16 +139,19 @@ export default {
         album_id: album.id,
         rev: 1,
         count: Math.min(1000, album.size)
-      }
+      };
       const request = get_vk_request(method, params, this.access_token);
 
       jsonp(request, async (err, data) => {
+        if (err) {
+          console.log(err);
+        }
         if (data.error) {
           console.log(data.error.error_msg);
         }
         if (data.response) {
           let items = data.response.items;
-          
+
           for (let i = 0; i < items.length; ++i) {
             let sizes = items[i].sizes;
             if (sizes.length < 1) {
@@ -188,7 +194,7 @@ export default {
       return this.hash_params.user_id;
     }
   }
-}
+};
 </script>
 
 <style scoped>

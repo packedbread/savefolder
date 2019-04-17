@@ -34,10 +34,8 @@
       "@vue/standard"
     ],
     "rules": {
-      "semi": [
-        2,
-        "always"
-      ]
+      "camelcase": 0,
+      "semi": ["error", "always"]
     },
     "parserOptions": {
       "parser": "babel-eslint"
