@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "firebase": "^5.9.4",
+    "jsonp": "^0.2.1",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1"
   },
@@ -33,7 +34,10 @@
       "@vue/standard"
     ],
     "rules": {
-      "semi": [2, "always"]
+      "semi": [
+        2,
+        "always"
+      ]
     },
     "parserOptions": {
       "parser": "babel-eslint"

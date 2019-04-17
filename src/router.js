@@ -5,6 +5,7 @@ import Home from './views/Home.vue';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -20,6 +21,11 @@ export default new Router({
       path: '/viewfolder',
       name: 'viewfolder',
       component: () => import('./views/Viewfolder.vue')
+    },
+    {
+      path: '/cloudfolder',
+      name: 'cloudfolder',
+      component: () => import('./views/Cloudfolder.vue')
     },
     {
       path: '/about',

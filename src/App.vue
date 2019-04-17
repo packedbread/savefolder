@@ -2,8 +2,11 @@
   <div id="app">
     <div id="header">
       <router-link class="router-link" to="/">Home</router-link>
-      <router-link class="router-link" to="/savefolder">Savefolder</router-link>
-      <router-link class="router-link" to="/viewfolder">Viewfolder</router-link>
+      <template v-if="user !== null">
+        <router-link class="router-link" to="/savefolder">Savefolder</router-link>
+        <router-link class="router-link" to="/viewfolder">Viewfolder</router-link>
+        <router-link class="router-link" to="/cloudfolder">Cloudfolder</router-link>
+      </template>
       <router-link class="router-link" to="/about">About</router-link>
       <div class="filler"></div>
       <template v-if="user === null">
@@ -68,13 +71,7 @@ html, body {
 
 #app {
   background-color: #b4cfec;
-
   height: 100%;
-
-  margin: 0;
-  border: 0;
-  padding: 0;
-
   display: flex;
   flex-direction: column;
 }
@@ -90,6 +87,7 @@ button:active {
 
 .page {
   flex-grow: 1;
+  padding: 10px;
 }
 
 #header {

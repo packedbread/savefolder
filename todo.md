@@ -8,3 +8,6 @@ Optimize image search:
 - in case of many results, provide only fixed quantity of images
 - dynamically upload images to search screen
 - move main search to external memory (db queries)
+
+## Cloudfolder
+Add support for full album upload

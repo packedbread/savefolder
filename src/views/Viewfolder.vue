@@ -134,7 +134,6 @@ export default {
     "t t e" 1fr
     / 1fr 1fr 2fr;
   grid-gap: 10px;
-  padding: 10px;
 }
 
 #image-wrapper {
