@@ -53,6 +53,12 @@ function get_vk_request(method, params, access_token) {
   return request;
 }
 
+function vk_photo_type_max(a, b) {
+  const order = ['s', 'm', 'x', 'y', 'z', 'w'];
+  const cut = ['o', 'p', 'q', 'r'];
+  
+}
+
 export default {
   data: function () {
     return {
@@ -108,12 +114,23 @@ export default {
       const request = get_vk_request(method, params, this.access_token);
 
       jsonp(request, (err, data) => {
-        console.log(data);
+        if (data.error) {
+          console.log(data.error.error_msg);
+        }
+        if (data.response) {
+          console.log(data.response);
+          let items = data.response.items;
+          
+          for (let i = 0; i < items.length; ++i) {
+            let sizes = items[i].sizes;
+            for (let j = 0; j < sizes.length; ++i) {
+              
+            }
+          }
 
-        
-
-        this.uploading.splice(this.uploading.indexOf(album.id), 1);
-        this.uploaded.push(album.id);
+          this.uploading.splice(this.uploading.indexOf(album.id), 1);
+          this.uploaded.push(album.id);
+        }
       });
     }
   },
