@@ -93,7 +93,12 @@ export default {
           tags: this.image_tags
         });
         this.image = null;
-        this.$set(this, 'external_tags', this.external_tags.concat(this.image_tags));
+        for (let i = 0; i < this.image_tags.length; ++i) {
+          let tag = this.image_tags[i];
+          if (!this.external_tags.includes(tag)) {
+            this.external_tags.push(tag);
+          }
+        }
         this.search_tags();
         this.$set(this, 'image_tags', []);
       }
