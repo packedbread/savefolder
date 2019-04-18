@@ -9,7 +9,7 @@
       <button v-on:click="update_albums">Update albums</button>
       <template v-if="album_list.length > 0">
         <p>Click on album you wish to upload</p>
-        <p>Caution: only the latest 1000 images from your album will be uploaded</p>
+        <p>Caution: only the latest {{ max_latest }} images from your album will be uploaded</p>
         <p>Album list:</p>
       </template>
       <ul>
@@ -90,7 +90,8 @@ export default {
       storage_ref: null,
       album_list: [],
       uploading: [],
-      uploaded: []
+      uploaded: [],
+      max_latest: 15
     };
   },
   methods: {
@@ -138,7 +139,7 @@ export default {
         owner_id: this.user_id,
         album_id: album.id,
         rev: 1,
-        count: Math.min(1000, album.size)
+        count: Math.min(this.max_latest, album.size)
       };
       const request = get_vk_request(method, params, this.access_token);
 
