@@ -33,7 +33,7 @@
 
 <script>
 import firebase from '../firebase';
-import { HollowDotsSpinner } from 'epic-spinners'
+import { HollowDotsSpinner } from 'epic-spinners';
 
 let auth = firebase.auth();
 
