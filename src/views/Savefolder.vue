@@ -51,10 +51,7 @@ export default {
     this.db_images_ref.on('value', snapshot => {
       let tags = [];
       for (let key in snapshot.val()) {
-        let t = snapshot.val()[key].tags;
-        if (t !== undefined) {
-          tags = tags.concat(t);
-        }
+        tags = tags.concat(snapshot.val()[key].tags || []);
       }
       this.$set(this, 'external_tags', tags);
       this.search_tags();

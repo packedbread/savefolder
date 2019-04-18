@@ -53,7 +53,7 @@ export default {
       for (let image_id in snapshot.val()) {
         this.external_images.push({
           id: image_id,
-          tags: snapshot.val()[image_id].tags,
+          tags: snapshot.val()[image_id].tags || [],
           url: await this.storage_ref.child(image_id).getDownloadURL()
         });
       }
@@ -120,7 +120,8 @@ export default {
       this.$set(this, 'search_results', []);
       for (let i = 0; i < this.external_images.length; ++i) {
         let image = this.external_images[i];
-        if (image.tags === undefined) {
+        console.log(image)
+        if (image.tags.length === 0) {
           if (this.search_request === '' || this.search_request === ':notags') {
             this.search_results.push(i);
           }
@@ -133,6 +134,7 @@ export default {
           }
         }
       }
+      console.log(this.search_results);
     }
   }
 };
