@@ -48,17 +48,14 @@ export default {
     this.storage_ref = storage.ref('images/');
 
     this.db_images_ref.once('value', async snapshot => {
-      let tags = [];
-      for (let key in snapshot.val()) {
-        let current_tags = snapshot.val()[key].tags || [];
-        for (let i = 0; i < current_tags.length; ++i) {
-          let tag = current_tags[i];
-          if (!tags.includes(tag)) {
-            tags.push(tag);
-          }
-        }
+      this.$set(this, 'external_images', []);
+      for (let image_id in snapshot.val()) {
+        this.external_images.push({
+          id: image_id,
+          tags: snapshot.val()[image_id].tags || [],
+          url: await this.storage_ref.child(image_id).getDownloadURL()
+        });
       }
-      this.$set(this, 'external_tags', tags);
       this.search_images();
       this.spinner = false;
     });
@@ -72,7 +69,6 @@ export default {
       image_id: '',
       image_tags: [],
       external_images: [],
-      external_tags: [],
       search_results: [],
       db_images_ref: null,
       storage_ref: null
