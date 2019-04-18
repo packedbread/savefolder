@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "epic-spinners": "^1.0.4",
     "firebase": "^5.9.4",
     "jsonp": "^0.2.1",
     "vue": "^2.6.6",
@@ -35,7 +36,10 @@
     ],
     "rules": {
       "camelcase": 0,
-      "semi": ["error", "always"]
+      "semi": [
+        "error",
+        "always"
+      ]
     },
     "parserOptions": {
       "parser": "babel-eslint"

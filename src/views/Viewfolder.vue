@@ -17,6 +17,11 @@
     <div id="external-wrapper">
       <input v-on:input="search_images" v-model="search_request" type="text" placeholder="Type to search images...">
       <div id="external-images">
+        <div class="spinner" v-if="spinner">
+          <div class="filler"></div>
+          <hollow-dots-spinner v-bind:animation-duration="1000" v-bind:dot-size="15" v-bind:dots-num="3" color="#8ca7c4"/>
+          <div class="filler"></div>
+        </div>
         <template v-for="index in search_results">
           <button v-on:click="select_image(index)" class="tag img" v-bind:key="index">
             <img class="preview" v-bind:src="external_images[index].url">
@@ -29,8 +34,12 @@
 
 <script>
 import firebase from '../firebase';
+import { HollowDotsSpinner } from 'epic-spinners';
 
 export default {
+  components: {
+    HollowDotsSpinner
+  },
   created: function () {
     let database = firebase.database();
     let storage = firebase.storage();
@@ -49,10 +58,12 @@ export default {
         });
       }
       this.search_images();
+      this.spinner = false;
     });
   },
   data: function () {
     return {
+      spinner: true,
       new_tag: '',
       search_request: '',
       image_url: '',
@@ -107,7 +118,6 @@ export default {
     },
     search_images: function () {
       this.$set(this, 'search_results', []);
-
       for (let i = 0; i < this.external_images.length; ++i) {
         let image = this.external_images[i];
         if (image.tags === undefined) {

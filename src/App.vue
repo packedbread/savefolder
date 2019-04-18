@@ -79,10 +79,10 @@ html, body {
 button, input {
   outline: none;
   padding: 10px;
-  background: #A0BBD8;
+  background: #a0bbd8;
 }
 button:active {
-  background: #96B1CE;
+  background: #96b1ce;
 }
 
 .page {
@@ -116,5 +116,10 @@ button:active {
 
 p {
   padding: 15px;
+}
+
+.spinner {
+  display: flex;
+  padding: 20px;
 }
 </style>
