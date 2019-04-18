@@ -79,6 +79,14 @@ export default {
       if (this.image_id !== '') {
         await this.storage_ref.child(this.image_id).delete();
         this.db_images_ref.child(this.image_id).remove();
+
+        for (let i = 0; i < this.external_images.length; ++i) {
+          if (this.external_images[i].id === this.image_id) {
+            this.external_images.splice(i, 1);
+            break;
+          }
+        }
+        this.search_images();
       }
       this.image_id = '';
       this.image_url = '';
