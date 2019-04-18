@@ -51,7 +51,7 @@ export default {
     this.db_images_ref.once('value', snapshot => {
       let tags = [];
       for (let key in snapshot.val()) {
-        let current_tags = snapshot.val()[key].tags;
+        let current_tags = snapshot.val()[key].tags || [];
         for (let i = 0; i < current_tags.length; ++i) {
           let tag = current_tags[i];
           if (!tags.includes(tag)) {
