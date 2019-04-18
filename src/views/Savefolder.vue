@@ -48,7 +48,7 @@ export default {
     this.db_images_ref = database.ref('images/');
     this.storage_ref = storage.ref('images/');
 
-    this.db_images_ref.on('value', snapshot => {
+    this.db_images_ref.once('value', snapshot => {
       let tags = [];
       for (let key in snapshot.val()) {
         tags = tags.concat(snapshot.val()[key].tags || []);
@@ -93,6 +93,8 @@ export default {
           tags: this.image_tags
         });
         this.image = null;
+        this.$set(this, 'external_tags', this.external_tags.concat(this.image_tags));
+        this.search_tags();
         this.$set(this, 'image_tags', []);
       }
     },

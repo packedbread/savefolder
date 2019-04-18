@@ -9,5 +9,8 @@ Optimize image search:
 - dynamically upload images to search screen
 - move main search to external memory (db queries)
 
+Search:
+- consider making search_results a computed property
+
 ## Cloudfolder
 Add support for full album upload
