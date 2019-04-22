@@ -88,12 +88,14 @@ button:active {
 .page {
   flex-grow: 1;
   padding: 10px;
+  overflow: auto;
 }
 
 #header {
   height: 50px;
   min-height: 50px;
   display: flex;
+  overflow: auto;
   background-color: #8ca7c4;
 }
 
