@@ -92,6 +92,7 @@ button:active {
 
 #header {
   height: 50px;
+  min-height: 50px;
   display: flex;
   background-color: #8ca7c4;
 }
