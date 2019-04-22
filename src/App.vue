@@ -102,7 +102,11 @@ button:active {
 
 #header a {
   text-align: center;
-  width: 100px;
+  box-sizing: border-box;
+  width: 150px;
+  min-width: 150px;
+  height: 50px;
+  min-height: 50px;
   padding: 15px;
   color: black;
   background-color: #a0bbd8;
