@@ -19,7 +19,7 @@
       <div id="external-images">
         <div class="spinner" v-if="spinner">
           <div class="filler"></div>
-          <hollow-dots-spinner v-bind:animation-duration="1000" v-bind:dot-size="15" v-bind:dots-num="3" color="#8ca7c4"/>
+          <self-building-square-spinner v-bind:animation-duration="6000" v-bind:size="40" color="#8ca7c4"/>
           <div class="filler"></div>
         </div>
         <template v-for="index in search_results">
@@ -34,11 +34,11 @@
 
 <script>
 import firebase from '../firebase';
-import { HollowDotsSpinner } from 'epic-spinners';
+import { SelfBuildingSquareSpinner } from 'epic-spinners';
 
 export default {
   components: {
-    HollowDotsSpinner
+    SelfBuildingSquareSpinner
   },
   created: function () {
     let database = firebase.database();
@@ -52,8 +52,8 @@ export default {
       for (let image_id in snapshot.val()) {
         this.external_images.push({
           id: image_id,
-          tags: snapshot.val()[image_id].tags || [],
-          url: await this.storage_ref.child(image_id).getDownloadURL()
+          tags: snapshot.val()[image_id].tags || [], 
+          url: snapshot.val()[image_id].url
         });
       }
       this.search_images();

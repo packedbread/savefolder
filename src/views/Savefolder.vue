@@ -19,7 +19,7 @@
       <input v-on:input="search_tags" v-model="search_request" type="text" placeholder="Type to search tags...">
       <div class="spinner" v-if="spinner">
         <div class="filler"></div>
-        <hollow-dots-spinner v-bind:animation-duration="1000" v-bind:dot-size="15" v-bind:dots-num="3" color="#8ca7c4"/>
+        <self-building-square-spinner v-bind:animation-duration="6000" v-bind:size="40" color="#8ca7c4"/>
         <div class="filler"></div>
       </div>
       <div ref="external-tags" id="external-tags">
@@ -33,13 +33,13 @@
 
 <script>
 import firebase from '../firebase';
-import { HollowDotsSpinner } from 'epic-spinners';
+import { SelfBuildingSquareSpinner } from 'epic-spinners';
 
 let auth = firebase.auth();
 
 export default {
   components: {
-    HollowDotsSpinner
+    SelfBuildingSquareSpinner
   },
   created: function () {
     let database = firebase.database();
@@ -90,13 +90,14 @@ export default {
         reader.readAsDataURL(this.$refs.upload.files[0]);
       }
     },
-    save: function () {
+    save: async function () {
       if (this.image !== null) {
         let db_image_ref = this.db_images_ref.push();
-        this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
+        await this.storage_ref.child(db_image_ref.key).putString(this.image.data, 'data_url');
         db_image_ref.set({
           created_by: auth.currentUser.uid,
-          tags: this.image_tags
+          tags: this.image_tags,
+          url: await this.storage_ref.child(db_image_ref.key).getDownloadURL()
         });
         this.image = null;
         for (let i = 0; i < this.image_tags.length; ++i) {

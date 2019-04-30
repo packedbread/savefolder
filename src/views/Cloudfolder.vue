@@ -25,7 +25,7 @@
               </template>
             </template>
             <template v-else>
-              <p>Uploading album "{{ album.title }}", please wait...</p>
+              <p>Uploading album "{{ album.title }}", please wait...   Uploaded {{ uploaded_count[album.id] }} out of {{ total_uploading[album.id] }}</p>
             </template>
           </li>
         </template>
@@ -91,7 +91,9 @@ export default {
       album_list: [],
       uploading: [],
       uploaded: [],
-      max_latest: 15
+      max_latest: 100,
+      uploaded_count: {},
+      total_uploading: {}
     };
   },
   methods: {
@@ -142,6 +144,9 @@ export default {
         count: Math.min(this.max_latest, album.size)
       };
       const request = get_vk_request(method, params, this.access_token);
+      
+      this.total_uploading[album.id] = Math.min(this.max_latest, album.size);
+      this.uploaded_count[album.id] = 0;
 
       jsonp(request, async (err, data) => {
         if (err) {
@@ -171,11 +176,13 @@ export default {
             let blob = await response.blob();
 
             let db_image_ref = this.db_images_ref.push();
-            this.storage_ref.child(db_image_ref.key).put(blob);
+            await this.storage_ref.child(db_image_ref.key).put(blob);
             db_image_ref.set({
               created_by: auth.currentUser.uid,
-              tags: []
+              tags: [],
+              url: await this.storage_ref.child(db_image_ref.key).getDownloadURL()
             });
+            ++this.uploaded_count[album.id];
           }
 
           this.uploading.splice(this.uploading.indexOf(album.id), 1);
